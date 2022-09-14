@@ -48,7 +48,7 @@ jobs:
         run: echo Hello, world!
       #运行一段node脚本试试水
       - name: node脚本获取天气
-        run: npm run test
+        run: node test.js
   #命名成error
   error:
     runs-on: ubuntu-latest
