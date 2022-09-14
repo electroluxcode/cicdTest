@@ -32,23 +32,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           node-version: 14.x
-
       # 安装依赖
       - name: Install Dependencies
         run: npm install 
-
       # 在 cra 中，使用 npm run lint 来模拟 ESLint
       - name: ESLint
         run: npm run lint
+      # 测试这玩意
+      - name: node脚本获取天气
+        run: node test.js
       # 在 npm audit --json
       - name: audit依赖包扫描
         run: npm audit --json
       #运行一段脚本试试水
       - name: Run a one-line script
         run: echo Hello, world!
-      #运行一段node脚本试试水
-      - name: node脚本获取天气
-        run: node test.js
+      
   #命名成error
   error:
     runs-on: ubuntu-latest
