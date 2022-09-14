@@ -1,0 +1,60 @@
+# 关于本次 workflow 的名字
+name: CI
+
+# 执行 CI 的时机: 当 git push 代码到 github 时
+on:
+#   schedule:  # 每天8：30做一些事情
+#     - cron:  '30 8 * * *'
+  push:
+    branches: [ "main" ]
+  pull_request: 
+    branches: [ "main" ] 
+    types: 
+      # 当新建了一个 PR 时 # 当提交 PR 的分支，未合并前并拥有新的 Commit 时
+      - opened
+      - synchronize
+
+# 执行所有的 jobs
+jobs:
+
+  #命名成lint
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # 切出代码，使用该 Action 将可以拉取最新代码
+      #- uses: actions/checkout@v2
+
+      # 配置 node.js 环境，此时使用的是 node14
+      # 注意此处 node.js 版本，与 Docker 中版本一致，与 package.json 中 engines.node 版本一致
+      # 如果需要测试不同 node.js 环境下的表现，可使用 matrix
+      # uses: actions/checkout@v2  这玩意可以在 ubuntu-20.04, ubuntu-18.04,上进行测试
+      - name: Setup Node
+        uses: actions/checkout@v2
+        with:
+          node-version: 14.x
+
+      # 安装依赖
+      - name: Install Dependencies
+        run: npm install 
+
+      # 在 cra 中，使用 npm run lint 来模拟 ESLint
+      - name: ESLint
+        run: npm run lint
+      # 在 npm audit --json
+      - name: audit依赖包扫描
+        run: npm audit --json
+      #运行一段脚本试试水
+      - name: Run a one-line script
+        run: echo Hello, world!
+      #运行一段node脚本试试水
+      - name: node脚本获取天气
+        run: npm run test
+  #命名成error
+  error:
+    runs-on: ubuntu-latest
+    steps:
+      # 运行bash试试水
+      - name: Run a multi-line script
+        shell: bash
+        run: |
+          sh pulish001.sh
